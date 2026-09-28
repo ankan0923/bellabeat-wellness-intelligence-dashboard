@@ -25,6 +25,11 @@ The unfiltered dashboard contains **33 anonymous participants**, **940 participa
 These figures change when a date, participant, or day-type filter is applied.
 
 ## Dashboard pages
+🌐 Live Dashboard
+
+The Streamlit dashboard link will be added here after deployment.
+
+[**Live Dashboard**](https://u6fhp6ny8mwa6lbgvwne5m.streamlit.app/)
 
 1. **Project brief:** Business question, preparation workflow, source coverage, and sample limits.
 2. **The pulse:** Executive KPIs, daily step trend and variation, and activity-band composition.
