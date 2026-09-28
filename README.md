@@ -62,7 +62,7 @@ The combined CSV was prepared from the project's six source streams. The app che
 Arrange the files like this:
 
 ```text
-your-project/
+Strava Fitness project/
 ├── app.py
 ├── sql_lab.py
 ├── requirements.txt
