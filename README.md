@@ -1,153 +1,153 @@
 # Bellabeat Wellness Intelligence Studio
 
-An interactive Streamlit case study that turns Fitbit activity, sleep, hourly movement, heart-rate, and weight records into a practical Bellabeat product research brief. The app combines visual exploration, a historical fitness goal calculator, recommendations, and a 30-question SQL analysis lab.
+I built this Streamlit dashboard to explore a simple question: **what can fitness tracker data tell us about everyday movement, sleep, and the kind of wellness support people might find useful?**
 
-> **Scope:** This is third-party Fitbit data from **12 April to 12 May 2016**, not Bellabeat customer data. The findings generate ideas to test; they do not establish product impact or provide medical advice.
+It brings together daily activity, hourly steps and calories, sleep, heart rate, and weight records. I also added a historical goal calculator, recommendations, and a SQL lab with 30 practice questions.
 
-## Project objective
+**[Explore the live dashboard](https://u6fhp6ny8mwa6lbgvwne5m.streamlit.app/)**
 
-Explore how movement differs across days and participants, identify gaps in sleep reporting, and propose measurable, optional wellness features. The central question is: **Could personal activity baselines and clearer data coverage make wellness feedback more useful than a single fixed goal?**
+> This is an independent Bellabeat case study using third-party Fitbit data from **12 April to 12 May 2016**. It is not Bellabeat customer data or medical advice.
 
-## Headline findings
+## Why I built it
 
-The unfiltered dashboard contains **33 anonymous participants**, **940 participant-days**, and **22,099 participant-hours**.
+One average can make a group look more similar than it really is. I wanted to see how movement changes across people and days, whether a fixed 10,000-step goal fits the records, and how missing sleep data affects the story. The goal is to turn those observations into ideas Bellabeat could test with its own users.
 
-| Finding | Full-sample result | Interpretation |
+## What I found
+
+With all dates, participants, and day types selected, the dashboard covers **33 anonymous device IDs, 940 participant-days, and 22,099 participant-hours**.
+
+| Finding | Full-sample result | What it means |
 | --- | ---: | --- |
-| Mean daily steps | 7,638 | The overall mean conceals substantial variation. |
-| Days below 5,000 steps | 303 / 940 (32.2%) | A sizable lower-activity group of days. |
-| Days at or above 10,000 steps | 303 / 940 (32.2%) | The same share reaches the common fixed goal. |
-| Days at or above 8,000 steps | 46.1% | Historical attainment changes when the threshold changes. |
-| Sleep reporting | 410 / 940 days (43.6%) | Sleep summaries apply only to recorded nights. |
-| Mean sleep on recorded nights | 7.0 hours | Missing nights are excluded, not treated as zero. |
-| Peak observed step hour | 18:00 | A possible window to investigate, not a proven best prompt time. |
+| Average daily steps | 7,638 | A useful starting point, but it hides wide variation. |
+| Days below 5,000 steps | 303 / 940 (32.2%) | Many days are well below the common 10k goal. |
+| Days reaching 10,000 steps | 303 / 940 (32.2%) | An equally large share reaches that goal. |
+| Days reaching 8,000 steps | 46.1% | Historical completion changes with the chosen target. |
+| Days with sleep recorded | 410 / 940 (43.6%) | More than half of the daily rows lack sleep duration. |
+| Average recorded sleep | 7.0 hours | This covers observed nights only. |
+| Peak hour by mean steps | 18:00 | A timing idea to test, not a proven best reminder time. |
 
-These figures change when a date, participant, or day-type filter is applied.
+The contrast in step counts stood out to me: **32.2% of days are below 5,000 steps, while another 32.2% reach 10,000**. This is why I would test goals based on a person's recent activity instead of assuming one target suits everyone. All figures update when you change the dashboard filters.
 
-## Dashboard pages
-🌐 Live Dashboard
+## Explore the dashboard
 
-The Streamlit dashboard link will be added here after deployment.
+1. **Project brief** introduces the question, sources, and limits of the sample.
+2. **The pulse** brings the main KPIs, step trend, and activity mix together.
+3. **Movement** compares weekly patterns, activity intensity, steps, calories, and step distributions.
+4. **Sleep** explores duration and makes missing sleep records visible.
+5. **Daily rhythm** shows when activity happens through the day and week.
+6. **Body signals** shows the heart-rate and weight records that are available.
+7. **Audience explorer** compares participant averages, goal completion, and consistency.
+8. **Goals & strategy** lets you set step, active-minute, and sleep targets against recorded history.
+9. **Findings & actions** connects patterns to measurable product experiments.
+10. **SQL Analysis** offers 30 intermediate and advanced SQLite questions.
 
-[**Live Dashboard**](https://u6fhp6ny8mwa6lbgvwne5m.streamlit.app/)
+The sidebar filters by **date range, anonymous participant ID, and weekday/weekend**. Those choices carry through the charts, calculator, SQL tables, and CSV downloads. The participant and goal pages also have their own controls.
 
-1. **Project brief:** Business question, preparation workflow, source coverage, and sample limits.
-2. **The pulse:** Executive KPIs, daily step trend and variation, and activity-band composition.
-3. **Movement:** Weekly step patterns, weekday/weekend goal gauges, intensity mix, step-calorie relationships, and step distributions.
-4. **Sleep:** Duration distribution, duration doughnut, reporting coverage by activity band and date, and steps-versus-sleep view.
-5. **Daily rhythm:** Hourly movement, separately indexed steps and calories, a day-hour heatmap, and time-period comparison.
-6. **Body signals:** Available heart-rate and weight timelines with clear coverage counts.
-7. **Audience explorer:** Participant-level movement, goal attainment, consistency, and three movement-group doughnuts.
-8. **Goals & strategy:** Historical step, active-minute, and sleep target scenarios; baseline windows; goal comparison; and test ideas.
-9. **Findings & actions:** Evidence, proposed experiments, success measures, and guardrails.
-10. **SQL Analysis:** 30 intermediate and advanced SQLite challenges with hints, an editor, reference queries, and downloadable results.
+## How I prepared the data
 
-The sidebar filters by **date range**, **anonymous device IDs**, and **weekday/weekend**. The same selection feeds the charts, calculator, SQL tables, and daily/hourly downloads. The Audience explorer also has a minimum-recorded-days slider; the calculator has its own participant, baseline-window, and goal controls.
+I used daily activity as the base, with **one row per participant and date**. Sleep and weight logs were matched by participant and date. Heart-rate readings and hourly data were summarized before joining, so the merge would not multiply daily rows. I kept an hourly activity table for the time-of-day analysis.
 
-## Data preparation
-
-The merged daily file represents one row per participant and date. Daily activity is the base table; sleep and weight are matched on participant/date. Heart-rate and hourly records are aggregated before the daily join to avoid multiplying rows. The hourly activity file remains separate to preserve the hour-level analysis.
-
-| Input in the analytical view | Main use | Full-sample coverage |
+| Source | Used for | Full-sample coverage |
 | --- | --- | --- |
 | Daily activity | Steps, active minutes, distance, total calories | 940 days |
-| Sleep | Duration, efficiency, observed-night goals | 410 days |
-| Hourly steps and calories | Hourly patterns | 22,099 hours |
-| Weight | Optional weight and recorded BMI | 67 days; 8 participants |
-| Heart rate | Available daily summaries | 334 days; 14 participants |
+| Sleep | Duration, efficiency, recorded-night goals | 410 days |
+| Hourly steps and calories | Activity through the day | 22,099 hours |
+| Weight | Optional weight and recorded BMI | 67 days; 8 people |
+| Heart rate | Available daily summaries | 334 days; 14 people |
 
-The combined CSV was prepared from the project's six source streams. The app checks required columns and drops duplicate participant-date or participant-hour keys in its loaded analysis view. Missing optional measurements remain missing.
+The combined CSV was prepared from the project's six source streams. The app checks the columns it needs and removes duplicate participant-date and participant-hour keys in its analysis view. Missing optional measurements stay missing; they are never counted as zero.
 
-## Run locally
+## Run the project locally
 
-### 1. Arrange the files
+Arrange the files like this:
 
 ```text
 your-project/
 ├── app.py
 ├── sql_lab.py
-├── Cleaned_Data/
+├── requirements.txt
+├── Cleaned Data/                  # Cleaned_Data/ or data/ also works
 │   ├── fitness_all_six_daily.csv
 │   └── hourly_activity.csv
-└── images/                         # You may instead put images beside app.py
-    ├── muscle_anatomy.png           # anatomy.png is also accepted
+└── Images/                        # images/ or beside app.py also works
+    ├── muscle anatomy.png         # muscle_anatomy.png or anatomy.png also works
     ├── movement.png
     ├── sleep.png
-    ├── sql.jpg                      # optional SQL page banner
-    └── H BIt.jpg                    # optional Body signals banner
+    ├── sql.jpg
+    └── Heart Beat.jpg             # H BIt.jpg also works
 ```
 
-The three PNGs are required by the current `app.py`. The two JPG banners are optional. Use the provided image files; the app does not generate these assets. If your anatomy file is named `anatomy.png`, you can keep that name. File names and capitalization for the other images should match the tree above.
+The two CSV filenames must match exactly. Images are optional: the app still runs without them, although their visuals will not appear. These illustrations were supplied for the project; the app does not generate them.
 
-The CSV filenames must be exactly `fitness_all_six_daily.csv` and `hourly_activity.csv`. The app also accepts a `data/` directory or CSVs beside `app.py`, but `Cleaned_Data/` is the recommended layout.
-
-### 2. Install dependencies
-
-From a terminal in `your-project`:
+Create a virtual environment:
 
 ```bash
 python -m venv .venv
 ```
 
-On Windows PowerShell:
+On **Windows PowerShell**:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
-python -m pip install streamlit pandas numpy plotly
+python -m pip install -r requirements.txt
 ```
 
-On macOS or Linux:
+On **macOS or Linux**:
 
 ```bash
 source .venv/bin/activate
-python -m pip install streamlit pandas numpy plotly
+python -m pip install -r requirements.txt
 ```
 
-### 3. Launch
+Start the dashboard:
 
 ```bash
 streamlit run app.py
 ```
 
-Open the local address shown in the terminal, usually `http://localhost:8501`. `sqlite3`, used by the SQL lab, is included with standard Python installations.
+The terminal will show a local URL, usually `http://localhost:8501`. Python's built-in `sqlite3` module runs the SQL lab.
 
-## SQL practice
+## Try the SQL lab
 
-The **SQL Analysis** page creates a temporary SQLite connection from the *currently filtered* data:
+The lab creates temporary SQLite tables from the **currently filtered data**: `fitness_all_six_daily` for participant-days and `hourly_activity` for participant-hours. `daily_wellness` is an alias for the daily table.
 
-- `fitness_all_six_daily`: one row per selected participant-day;
-- `hourly_activity`: selected participant-hours;
-- `daily_wellness`: a view alias for the daily table.
+Choose a topic and difficulty, look at the table columns, write a read-only `SELECT` query, and compare your result with a reference answer. The app displays up to 500 rows and lets you download the result.
 
-Choose difficulty and topic, inspect the schema, write a read-only `SELECT` query, run it, and compare your result with a reference solution. Up to 500 rows display in the app; results can be downloaded as CSV. This lab is educational and uses the dashboard's analytical data, not a production database.
+```sql
+SELECT DayType,
+       COUNT(*) AS recorded_days,
+       ROUND(AVG(TotalSteps), 0) AS avg_steps
+FROM fitness_all_six_daily
+GROUP BY DayType;
+```
 
-## Recommendations
+## Ideas worth testing
 
-1. **Test a personal baseline goal:** Compare recent-baseline step targets with a fixed target among consenting users. Measure four-week active use, goal completion, and reminder opt-outs.
-2. **Make sleep-data coverage visible:** Offer a weekly summary only with enough recorded nights; measure reporting completion, summary retention, and opt-outs.
-3. **Test prompt timing:** Compare opt-in prompts near a user's usual active window with a fixed schedule. Monitor engagement and notification fatigue.
-4. **Explain optional measurements:** Make consent and available coverage clear for weight and heart rate; track opt-in and repeat logging without health claims.
+1. **A personal step goal:** Compare a target based on recent steps with a fixed goal. Measure four-week activity, completion, and reminder opt-outs.
+2. **A sleep summary with honest coverage:** Show a weekly summary only when enough nights were recorded, and tell users how complete it is.
+3. **Better timing for optional prompts:** Compare messages near a user's usual active window with a fixed send time, while watching for notification fatigue.
+4. **Clear choices around body measurements:** Explain available weight and heart-rate records, and let people opt in without making health claims.
 
-## Limitations
+These are **experiments to consider**, not features proven to work by this dataset.
 
-- The sample is small, observational, and from 2016. It contains no Bellabeat customer identity, demographics, sales, or campaign outcomes.
-- Sleep, heart-rate, weight, and hourly records have different coverage. Missing values mean unknown; they cannot be safely treated as zero or ignored when discussing representativeness.
-- Same-date activity and sleep do not establish event order or causality. Total recorded calories include baseline expenditure, not just exercise calories.
-- The calculator reports **historical threshold attainment**, not a forecast. The default last-14-dates calculator window differs from the full-sample headline KPIs.
-- Participant movement groups describe recorded step averages. They are not demographic or commercial customer segments.
+## What the data cannot tell us
+
+This is a small observational Fitbit sample from 2016. It has no Bellabeat customer IDs, demographics, purchases, or campaign outcomes, so I cannot use it to claim what Bellabeat customers want or how a product change would perform. Sleep, heart-rate, weight, and hourly data have different coverage. Same-date steps and sleep do not establish cause and effect, and total calories include baseline expenditure.
+
+The calculator reports how often a target was met **in the selected history**; it is not a forecast. Its default last-14-dates window also differs from the full-sample figures above.
 
 ## Project files
 
-| File | Role |
+| File | Purpose |
 | --- | --- |
-| `app.py` | Streamlit dashboard, filters, charts, and scenario calculator |
-| `sql_lab.py` | 30 questions, temporary SQLite tables, and read-only query runner |
-| `Cleaned_Data/fitness_all_six_daily.csv` | Merged daily analytical data |
-| `Cleaned_Data/hourly_activity.csv` | Hourly steps and calories |
-| `client_storytelling.md` | Page-by-page client presentation script |
-| `Bellabeat_Wellness_Project_Report.pdf` | Overall project report |
+| `app.py` | Streamlit pages, filters, charts, and goal calculator |
+| `sql_lab.py` | SQL questions and read-only query runner |
+| `requirements.txt` | Python packages needed to run the app |
+| `Cleaned Data/fitness_all_six_daily.csv` | Combined daily analysis table |
+| `Cleaned Data/hourly_activity.csv` | Hourly movement table |
+| `client_storytelling.md` | Page-by-page presentation script |
+| `Bellabeat_Wellness_Project_Report.pdf` | Full project report |
 
-## Author
-**Prepared by Ankan Chowdhury** 
+## About me
 
-Data Analysis, Dashboarding and SQL Practice case study.
+I'm **Ankan Chowdhury**, an aspiring data analyst interested in turning clean data into clear business decisions. This project brings together Python, SQL, dashboard design, and storytelling around a real analysis question.
