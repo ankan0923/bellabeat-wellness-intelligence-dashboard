@@ -113,14 +113,6 @@ The lab creates temporary SQLite tables from the **currently filtered data**: `f
 
 Choose a topic and difficulty, look at the table columns, write a read-only `SELECT` query, and compare your result with a reference answer. The app displays up to 500 rows and lets you download the result.
 
-```sql
-SELECT DayType,
-       COUNT(*) AS recorded_days,
-       ROUND(AVG(TotalSteps), 0) AS avg_steps
-FROM fitness_all_six_daily
-GROUP BY DayType;
-```
-
 ## Ideas worth testing
 
 1. **A personal step goal:** Compare a target based on recent steps with a fixed goal. Measure four-week activity, completion, and reminder opt-outs.
