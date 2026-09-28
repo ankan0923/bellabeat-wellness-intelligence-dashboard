@@ -144,4 +144,5 @@ Choose difficulty and topic, inspect the schema, write a read-only `SELECT` quer
 
 ## Author
 **Prepared by Ankan Chowdhury** 
-Data analysis, Dashboarding, and SQL Practice case study.
+
+Data Analysis, Dashboarding and SQL Practice case study.
