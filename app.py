@@ -10,30 +10,31 @@ from sql_lab import QUESTIONS, make_connection, execute_readonly
 
 st.set_page_config(page_title="Bellabeat Studio | Wellness intelligence", page_icon="✦", layout="wide", initial_sidebar_state="expanded")
 APP_DIR = Path(__file__).resolve().parent
-ROOT = next((folder for folder in (APP_DIR / "Cleaned_Data", APP_DIR / "data", APP_DIR)
+ROOT = next((folder for folder in (APP_DIR / "Cleaned_Data", APP_DIR / "Cleaned Data", APP_DIR / "data", APP_DIR)
              if (folder / "fitness_all_six_daily.csv").is_file()), APP_DIR / "Cleaned_Data")
 INK, MUTED, TEAL, LIME, CORAL, PURPLE = "#EAF7F5", "#A7BDC2", "#3AE0C8", "#D7F47A", "#FF948B", "#BEABFF"
 PALETTE = [TEAL, CORAL, PURPLE, "#E4B65C", "#5C9FB8"]
-IMAGE_DIR = APP_DIR / "images" if (APP_DIR / "images").is_dir() else APP_DIR
+IMAGE_DIRS = [APP_DIR / folder for folder in ("images", "Images", "")]
+
+def find_image(*names):
+    """Find a supplied asset in either common image folder or beside app.py."""
+    return next((directory / name for directory in IMAGE_DIRS for name in names
+                 if (directory / name).is_file()), None)
 
 @st.cache_data(show_spinner=False)
-def local_image(name):
+def local_image(path):
     """Embed a provided image so it renders in HTML cards and hero backgrounds."""
-    encoded = base64.b64encode((IMAGE_DIR / name).read_bytes()).decode("ascii")
-    mime = "image/jpeg" if Path(name).suffix.lower() in (".jpg", ".jpeg") else "image/png"
+    if path is None:
+        return None
+    encoded = base64.b64encode(path.read_bytes()).decode("ascii")
+    mime = "image/jpeg" if path.suffix.lower() in (".jpg", ".jpeg") else "image/png"
     return f"data:{mime};base64,{encoded}"
 
-try:
-    muscle_file = next((name for name in ("muscle_anatomy.png","muscle anatomy.png","anatomy.png")
-                        if (IMAGE_DIR/name).is_file()), "muscle_anatomy.png")
-    MUSCLE_IMAGE = local_image(muscle_file)
-    RUN_IMAGE = local_image("movement.png")
-    SLEEP_IMAGE = local_image("sleep.png")
-except FileNotFoundError as exc:
-    st.error(f"Missing image asset: {exc}. Place the PNGs beside app.py or inside an images folder.")
-    st.stop()
-SQL_IMAGE = local_image("sql.jpg") if (IMAGE_DIR / "sql.jpg").is_file() else None
-HEART_IMAGE = local_image("H BIt.jpg") if (IMAGE_DIR / "H BIt.jpg").is_file() else None
+MUSCLE_IMAGE = local_image(find_image("muscle_anatomy.png", "muscle anatomy.png", "anatomy.png"))
+RUN_IMAGE = local_image(find_image("movement.png"))
+SLEEP_IMAGE = local_image(find_image("sleep.png"))
+SQL_IMAGE = local_image(find_image("sql.jpg"))
+HEART_IMAGE = local_image(find_image("H BIt.jpg", "Heart Beat.jpg"))
 
 st.markdown("""<style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;600;700;800&display=swap');
@@ -124,7 +125,7 @@ with st.sidebar.expander("Download filtered records"):
     st.download_button("Hourly CSV",h.to_csv(index=False).encode(),"bellabeat_hourly_filtered.csv","text/csv")
 st.sidebar.caption("Fitbit sample · April–May 2016")
 with st.sidebar.expander("Visual assets"):
-    st.caption("Anatomy, movement, and sleep images supplied for this project. They are illustrative and do not represent measured participant anatomy or sleep physiology.")
+    st.caption("Supplied illustrations are visual context only; they do not represent measured participant anatomy or sleep physiology. Images may be stored in Images/, images/, or beside app.py.")
 
 def hero(tag,title,subtitle,image=None):
     style = f' style="background-image:linear-gradient(90deg,#0a202bf2 0%,#0a202bdc 47%,#0a202b55 100%),url(\'{image}\')"' if image else ""
@@ -334,7 +335,10 @@ elif section=="Movement":
             fig.update_xaxes(title="Average recorded minutes");fig.update_yaxes(title="")
             draw(fig,"move-stack")
         with anatomy_col:
-            st.markdown(f'<div class="muscle-card"><img src="{MUSCLE_IMAGE}" alt="User-provided human muscle illustration"><small>Human muscle anatomy · visual context only</small></div>',unsafe_allow_html=True)
+            if MUSCLE_IMAGE:
+                st.markdown(f'<div class="muscle-card"><img src="{MUSCLE_IMAGE}" alt="User-provided human muscle illustration"><small>Human muscle anatomy · visual context only</small></div>',unsafe_allow_html=True)
+            else:
+                st.caption("Anatomy illustration unavailable. Add muscle anatomy.png to Images/ to display it.")
         callout("Activity and sedentary minutes come from device records. Their sum may not equal a full day when wear time varies.")
     with tab3:
         left,right=st.columns(2)
@@ -648,7 +652,7 @@ elif section=="Findings & actions":
                     "Opt-in rate, repeat logging and opt-outs; avoid health claims.")
     callout("Conclusion: the strongest opportunity is to personalize goals while making data coverage visible. These third-party Fitbit records from 2016 are a small observational sample; Bellabeat impact requires first-party research and controlled testing.")
 else:
-    hero("08 · SQL analysis studio","SQL Analysis & Insights","This module is designed to demonstrate query design, aggregation, segmentation, KPI extraction and business storytelling — not just display SQL syntax.",SQL_IMAGE)
+    hero("08 · SQL analysis studio","30 questions. Your query.","Practice intermediate and advanced SQL against the same filtered six-source daily and hourly data used in the dashboard.",SQL_IMAGE)
     a,b,c=st.columns(3)
     with a:card("CHALLENGES","30","15 intermediate · 15 advanced")
     with b:card("DAILY ROWS",f"{len(d):,}","table: fitness_all_six_daily")
