@@ -116,16 +116,6 @@ The **SQL Analysis** page creates a temporary SQLite connection from the *curren
 
 Choose difficulty and topic, inspect the schema, write a read-only `SELECT` query, run it, and compare your result with a reference solution. Up to 500 rows display in the app; results can be downloaded as CSV. This lab is educational and uses the dashboard's analytical data, not a production database.
 
-Example:
-
-```sql
-SELECT DayType,
-       COUNT(*) AS recorded_days,
-       ROUND(AVG(TotalSteps), 0) AS avg_steps
-FROM fitness_all_six_daily
-GROUP BY DayType;
-```
-
 ## Recommendations
 
 1. **Test a personal baseline goal:** Compare recent-baseline step targets with a fixed target among consenting users. Measure four-week active use, goal completion, and reminder opt-outs.
@@ -152,4 +142,6 @@ GROUP BY DayType;
 | `client_storytelling.md` | Page-by-page client presentation script |
 | `Bellabeat_Wellness_Project_Report.pdf` | Overall project report |
 
-**Prepared by Ankan Chowdhury** · Data analysis, dashboarding, and SQL practice case study.
+## Author
+**Prepared by Ankan Chowdhury** 
+Data analysis, Dashboarding, and SQL Practice case study.
